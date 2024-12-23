@@ -8,7 +8,7 @@ ttb_calculate_index.mlx为程序入口。
 如果使用该程序遇到问题需要反馈，可通过邮件方式联系yangen_shen@163.com
 
 如果你使用了这个程序，请引用：  
-[1] Dai, Z., Shen, Y., & Li, A. (2024). Automatic extraction of the geomorphic indices (1.0). Zenodo. https://doi.org/10.5281/zenodo.14547642
+[1] Dai, Z., Shen, Y., & Li, A. (2024). Automatic extraction of the geomorphic indices (1.0). Zenodo. https://doi.org/10.5281/zenodo.14547642  
 [2] Schwanghart, W., Kuhn, N.J., 2010. TopoToolbox: A set of Matlab functions for topographic analysis. Environmental Modelling & Software 25.  
 [3] Schwanghart, W., Scherler, D., 2014. Short Communication: TopoToolbox 2 – MATLAB-based software for topographic analysis and modeling in Earth surface sciences. Earth Surface Dynamics 2, 1–7.  
 
