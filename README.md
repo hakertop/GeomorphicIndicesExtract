@@ -1,7 +1,7 @@
 本程序基于TopoToolBox开发，用于自动化计算流域内的构造地貌因子，主要包括：  
 流域下的面积高程积分（HI-Hypsometric Integral）,流域不对称度（AF-Asymmetry Factor）,盆地形状指数（BS-Basin Shape）,谷底宽高比（VF-Valley Floor）,标准化河流梯度指数（SL/K-Standardized Stream-Length）,伸长比（Re-Elongation Ration）面积高程曲线（HC-Hypsometric curve）。  
 
-ttb_calculate_index.mlx为程序入口。
+ttb_calculate_index.mlx为程序入口，assets为测试数据。
 
 开发人员：戴钊龙，沈言根，李安波  
 
