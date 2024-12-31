@@ -1,0 +1,15 @@
+@startuml workflow.plantuml
+
+start
+: 研究区 DEM <
+: select_basins.mlx |
+: 流域 DEM >
+while (对每一个流域)
+    : 选取感兴趣地貌指数 <
+    : 输入该流域所需的基本参数 <
+    : 计算地貌指数 |
+endwhile
+: indices.xlsx >
+end
+
+@enduml
