@@ -4,7 +4,7 @@
 
 ## 二、函数列表与功能描述
 
-注意以下的数据都是面向流域的，类型为 GRIDobj，main_stream 数据类型为 STREAMobj。基于预处理阶段得到的感兴趣流域的 DEM 得到。
+注意以下的数据都是面向完整流域的，输入数据一般为TIFF格式的DEM。
 
 ### 1. 面积高程积分（HI, Hypsometric Integral）函数
 - 函数名：`ttb_calculate_hi_index`
