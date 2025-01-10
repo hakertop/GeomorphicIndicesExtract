@@ -99,40 +99,53 @@ classdef Utils
             if ~exist(output_workspace, "dir")
                 mkdir(output_workspace);
             end
-            
+        
             % 加载 DEM 并进行填洼、高斯滤波
             dem = fillsinks(GRIDobj(dem_file_path));
             dem.Z = imgaussfilt(dem.Z, 2);
-            
+        
             % 流向分析
             flow_direction = FLOWobj(dem);
-            
+        
             % 流域分析
             basins = drainagebasins(flow_direction);
-            [~, L_x, L_y] = GRIDobj2polygon(basins);
-            
+            [basin_polygons, L_x, L_y] = GRIDobj2polygon(basins);
+        
             % 可视化
             figure;
             imageschs(dem, basins, 'colormap', lines);
             hold on;
             plot(L_x, L_y, 'Color', 'w', 'LineWidth', 2);
-            hold off;
-            title('流域分区（单击左键选择感兴趣的流域）');
-            
-            % 用户交互选择流域
-            selected_basins = ginput();
-            % 将地理坐标转换为矩阵索引
-            [row, col] = dem.coord2sub(selected_basins(:, 1), selected_basins(:, 2));
-            % 根据矩阵索引提取流域 ID
-            selected_ids = unique(basins.Z(sub2ind(size(basins.Z), row, col)));
-            selected_ids(selected_ids == 0) = []; % 排除背景值
-            
+            title('流域分区（单击左键选择感兴趣的流域，按 Enter 键退出）');
+        
             % id列表存为txt
             fid = fopen(strcat(output_workspace, "../basins_id_list.txt"), "w+");
         
-            % 导出选定流域为 TIF
-            for id = selected_ids'
+            % 用户交互选择流域
+            selected_ids = [];
+            while true
+                [x, y, button] = ginput(1); % 每次仅取一个点
+                if isempty(button) % 按下 Enter 键退出
+                    break;
+                end
+                % 将地理坐标转换为矩阵索引
+                [row, col] = dem.coord2sub(x, y);
+                % 根据矩阵索引提取流域 ID
+                id = basins.Z(row, col);
+                if id == 0 || ismember(id, selected_ids) % 跳过背景值或已选 ID
+                    continue;
+                end
+                selected_ids = [selected_ids; id];
+        
+                % 计算流域的有效多边形中心点
+                warning off;
+                polygon = basin_polygons(id);
+                [center_x, center_y] = centroid(polyshape(polygon.X, polygon.Y));
+        
+                % 在图上标记流域 ID
+                text(center_x, center_y, num2str(id), 'Color', 'red', 'FontSize', 14, 'FontWeight', 'bold', 'HorizontalAlignment', 'center', 'BackgroundColor', 'w');
                 fprintf(fid, "%d\n", id);
+        
                 % 生成该流域的文件夹
                 basin_output_file = strcat(output_workspace, "\basin_", num2str(id), "\");
                 if ~exist(basin_output_file, "dir")
@@ -146,18 +159,16 @@ classdef Utils
                 basin_elevation = crop(basin_elevation, [bound(1), bound(3)], [bound(2), bound(4)]);
                 output_file = fullfile(basin_output_file, sprintf('basin_%d.tif', id));
                 basin_elevation.GRIDobj2geotiff(output_file);
-                 % 展示导出的DEM
-                 
-                 figure;
-                 imageschs(basin_elevation);
-                 title(strcat("流域 ", num2str(id), " DEM"));
                 fprintf('流域 %d 导出到 %s\n', id, output_file);
             end
-            
+        
             fclose(fid);
-            
+            hold off;
+        
             disp('流域导出完成！');
         end
+
+
         
         function rectangle = extract_valid_bound(gridObj)
             %% 提取TopoToolBox GRIDobj对象的有效范围（忽略四边NaN值）
